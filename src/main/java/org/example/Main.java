@@ -10,7 +10,15 @@ public class Main {
         window.setResizable(false);
         window.setTitle("2D Rouglike Demo");
 
-        window.setLoactionRelativeTo(null);
+        GamePanel gamePanel = new GamePanel();
+        window.add(gamePanel);
+
+        window.pack();
+
+        window.setLocationRelativeTo(null);
+        window.setVisible(true);
+
+        gamePanel.startGameThread();
 
     }
 
