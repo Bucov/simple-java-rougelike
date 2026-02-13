@@ -1,32 +1,42 @@
 package org.example;
 
+import entity.Player;
+import tile.TileManager;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable{
 
-    //screen settings
+    //SCREEN SETTINGS
     final int originalTileSize = 16; //16x16 Map tile
     final int scale = 3;
 
-    final int tileSize = originalTileSize * scale;
-    final int maxScreenCol = 16;
-    final int maxScreenRow = 12; //Screen size 16x12 (4:3 Ratio)
-    final int screenWidth = tileSize * maxScreenCol; // 768 pixels
-    final int screenHeight = tileSize * maxScreenRow; // 576 pixels
+    public final int tileSize = originalTileSize * scale;
+    public final int maxScreenCol = 16;
+    public final int maxScreenRow = 12; //Screen size 16x12 (4:3 Ratio)
+    public final int screenWidth = tileSize * maxScreenCol; // 768 pixels
+    public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
 
+    //WORLD SETTINGS
+    public final int maxWorldCol = 50;
+    public final int maxWorldRow = 50;
+    public final int worldWidth = tileSize * maxWorldCol;
+    public final int worldHeight = tileSize * maxWorldRow;
 
     //FPS
     int fps = 60;
 
+    TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
+    public Player player =  new Player(this, keyH);
 
     //Set players default position
 
-    int playerX = 100;
-    int platerY = 100;
-    int playerSpeed = 4;
+//    int playerX = 100;
+//    int platerY = 100;
+//    int playerSpeed = 4;
 
     public GamePanel()  {
 
@@ -53,16 +63,10 @@ public class GamePanel extends JPanel implements Runnable{
 
         while(gameThread != null){
 
-
-
-
-
             // 1 UPDATE: We use this for updating information, such as character position
             update();
             // 2 DRAW: Draw the screen with the updated information
             repaint();
-
-
 
             try {
                 double remainingTime = nextDrawTime - System.nanoTime();
@@ -81,18 +85,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void update(){
 
-        if(keyH.upPressed){
-            platerY -= playerSpeed;
-        }
-        else if(keyH.downPressed){
-            platerY += playerSpeed;
-        }
-        else if(keyH.rightPressed){
-            playerX += playerSpeed;
-        }
-        else if(keyH.leftPressed){
-            playerX -= playerSpeed;
-        }
+        player.update();
     }
 
     public void paintComponent(Graphics g){
@@ -101,9 +94,9 @@ public class GamePanel extends JPanel implements Runnable{
 
         Graphics g2 = (Graphics2D)g;
 
-        g2.setColor(Color.WHITE);
+        tileM.draw((Graphics2D) g2);
 
-        g2.fillRect(playerX, platerY, tileSize, tileSize);
+        player.draw((Graphics2D) g2);
 
         g2.dispose();
     }
